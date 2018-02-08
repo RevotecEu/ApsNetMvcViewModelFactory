@@ -16,7 +16,7 @@ PM add Ninjet, we use it as dependency resolver
 
 public class MyVMBuilder: IVMBuilder<DBContext,MyVm>
     {
-        public VMThing Build(IoTContext context)
+        public MyVM Build(IoTContext context)
         {
           // do what needs to be done
         }
