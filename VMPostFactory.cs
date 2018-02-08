@@ -1,10 +1,8 @@
-﻿using System;
+﻿using Revo.Utilities;
+using System;
 using System.Web.Mvc;
-using DBoard.DAL;
-using DBoard.Models.Views;
-using Revo.Utilities;
 
-namespace DBoard.Utilities.VMFactory
+namespace Revo.VMFactory
 {
     public interface IResponse
     {

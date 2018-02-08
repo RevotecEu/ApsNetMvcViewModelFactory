@@ -1,10 +1,8 @@
-﻿using System;
+﻿using Revo.Utilities;
+using System;
 using System.Web.Mvc;
-using DBoard.DAL;
-using DBoard.Models.Views;
-using Revo.Utilities;
 
-namespace DBoard.Utilities.VMFactory
+namespace Revo.VMFactory
 {
     /// <summary>
     /// Interface of the factory to build views
@@ -15,6 +13,7 @@ namespace DBoard.Utilities.VMFactory
     {
         /// <summary>
         /// Creates a view without parameter
+        /// <see cref="WTWIoT.Utilities.VMFactory.VMFactoryBindings.RegisterBindings(Ninject.IKernel)"/>
         /// <see cref="DBoard.Utilities.VMFactory.VMFactoryBindings.RegisterBindings(Ninject.IKernel)"/>
         /// </summary>
         /// <typeparam name="TView"></typeparam>
@@ -23,6 +22,7 @@ namespace DBoard.Utilities.VMFactory
 
         /// <summary>
         /// Creates view with paramer of type TInput
+        /// <see cref="WTWIoT.Utilities.VMFactory.VMFactoryBindings.RegisterBindings(Ninject.IKernel)"/>
         /// <see cref="DBoard.Utilities.VMFactory.VMFactoryBindings.RegisterBindings(Ninject.IKernel)"/>
         /// </summary>
         /// <typeparam name="TView">type of view to build</typeparam>
@@ -33,6 +33,7 @@ namespace DBoard.Utilities.VMFactory
 
         /// <summary>
         /// Creates view with paramer of type TInput i1 and TInput2 i2
+        /// <see cref="WTWIoT.Utilities.VMFactory.VMFactoryBindings.RegisterBindings(Ninject.IKernel)"/>        
         /// <see cref="DBoard.Utilities.VMFactory.VMFactoryBindings.RegisterBindings(Ninject.IKernel)"/>
         /// </summary>
         /// <typeparam name="TView"></typeparam>
@@ -62,6 +63,7 @@ namespace DBoard.Utilities.VMFactory
         /// <para>2. Define VMExampleDataBuilder -> how to populate model class</para>
         /// <para>3. Bind IVMFactory to concrete  VMExampleDataBuilder VMExampleData in VMFactoryBindings</para>
         /// <para>VMFactoryBindings.RegisterBindings: register bindings there. VMBuilders.cs File for simple builders</para>
+        /// <see cref="WTWIoT.Utilities.VMFactory.VMFactoryBindings.RegisterBindings(Ninject.IKernel)"/>                
         /// <see cref="DBoard.Utilities.VMFactory.VMFactoryBindings.RegisterBindings(Ninject.IKernel)"/>
         /// </summary>
         /// <typeparam name="TView"></typeparam>
@@ -104,6 +106,7 @@ namespace DBoard.Utilities.VMFactory
         /// <para>2. Define VMExampleDataBuilder -> how to populate model class</para>
         /// <para>3. Bind IVMFactory to concrete  VMExampleDataBuilder VMExampleData in VMFactoryBindings</para>
         /// <para>VMFactoryBindings.RegisterBindings -> register bindings there. VMBuilders.cs -> File for simple builders</para>
+        /// <see cref="WTWIoT.Utilities.VMFactory.VMFactoryBindings.RegisterBindings(Ninject.IKernel)"/>        
         /// <see cref="DBoard.Utilities.VMFactory.VMFactoryBindings.RegisterBindings(Ninject.IKernel)"/>
         /// </summary>
         /// <typeparam name="TView"></typeparam>
@@ -122,19 +125,7 @@ namespace DBoard.Utilities.VMFactory
         private TContext _Context;
     }
 
-    public static class VMDefaultFactoryExtension
-    {
-        /// <summary>
-        /// Add VMShared to model if it is inherited by IHasVMShared
-        /// </summary>
-        /// <param name="fac"></param>
-        /// <param name="shared"></param>
-        public static void AddShared(this VMDefaultFactory<AppDBContext> fac, IHasVMShared shared)
-        {
-            shared.Shared=fac.CreateView<VMShared>();
-        }
-    }
-
+    
     /// <summary>
     /// Interface to populate a model, concrete implementation is in the derived class, no param
     /// </summary>
@@ -163,15 +154,32 @@ namespace DBoard.Utilities.VMFactory
     }
 
     /// <summary>
+    /// Interface for a shared view model
+    /// </summary>
+    public interface IVMShared
+    {
+
+    }
+
+    public static class VMDefaultFactoryExtension
+    {
+        /// <summary>
+        /// Add VMShared to model if it is inherited by IHasVMShared
+        /// </summary>
+        /// <param name="fac"></param>
+        /// <param name="shared"></param>
+        public static void AddShared<type>(this IVMFactory fac, IHasVMShared shared)
+        {
+            shared.Shared = (IVMShared)fac.CreateView<type>();
+        }
+    }
+
+    /// <summary>
     /// Interface is used to build a has a relationship with any type which can be used in the factory
     /// </summary>
     public interface IHasVMShared
     {
-        VMShared Shared { get; set; }
+        IVMShared Shared { get; set; }
     }
 
-   
-   
-
-    
 }
